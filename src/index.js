@@ -2,35 +2,43 @@ module.exports = function longestConsecutiveLength(array) {
   // your solution here
   if (array.length == 0) {
     return 0;
+  } else if (array.length == 1) {
+    return 1;
   }
-  
+
+  var count = 1;
   var set = [];
-  var max = 1;
-  var l, r;
+  var newSet = [];
 
-  for (let i = 0; i < array.length; i++) {
-    set.push(array[i]);
+  if (array.length > 1) {
+    set = sortNum(array);
+
+    for (let i = 0; i < set.length; i++) {
+      if (set[i] + 1 == set[i+1]) {
+        count++;
+      } else if (set[i+1] != set[i]) {
+        newSet.push(count);
+        count = 1;
+      }
+    }
+    return Math.max.apply(null, newSet);
   }
 
-  for (let i = 0; i < array.length; i++) {
-    l = array[i] -1;
-    r = array[i] +1;
-    var count = 1;
+  function sortNum(array) {
+    var sorted = [];
 
-    while (set.indexOf(l) != -1) {
-      count++;
-      set.splice(set.indexOf(l), 1);
-      l--;
+    var middle = Math.floor(array.length/2);
+    var left = array.slice(0, middle);
+    var right = array.slice(middle);
+
+    while (left.length > 0 && right.length > 0) {
+      if (left[0] < right[0]) {
+        sorted.push(left.shift());
+      } else {
+        sorted.push(right.shift());
+      } 
     }
-
-    while (set.indexOf(r) != -1) {
-      count++;
-      set.splice(set.indexOf(r), 1);
-      r++;
-    }
-
-    max = Math.max(count, max);
-  }
-  return max;
+    return sorted.concat(left).concat(right);
+  }/**/
 
 }
